@@ -1,0 +1,52 @@
+<idea-plugin>
+    <id>com.gpomares.git-commit-tracker</id>
+    <name>Git Commit Tracker</name>
+    <vendor email="support@yourcompany.com" url="https://www.yourcompany.com">Your Company</vendor>
+
+    <description><![CDATA[
+        Track and filter commits across all Git repositories in your IntelliJ project.<br/>
+        <br/>
+        <strong>Features:</strong>
+        <ul>
+            <li>Auto-detect all Git repositories in open projects</li>
+            <li>Filter commits by author, date range, and repository</li>
+            <li>View commit details: message, hash, branch, date, and author</li>
+            <li>Optimized for handling many repositories simultaneously</li>
+        </ul>
+    ]]></description>
+
+    <!-- Plugin dependencies -->
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.vcs</depends>
+    <depends>Git4Idea</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Tool Window Registration -->
+        <toolWindow
+            id="Git Commits"
+            anchor="bottom"
+            icon="AllIcons.Vcs.CommitNode"
+            factoryClass="com.gpomares.committracker.toolwindow.CommitTrackerToolWindowFactory"
+            canCloseContents="false"
+        />
+
+        <!-- Project Services -->
+        <projectService
+            serviceImplementation="com.gpomares.committracker.services.GitCommitService"
+        />
+        <projectService
+            serviceImplementation="com.gpomares.committracker.services.RepositoryDetectionService"
+        />
+        <projectService
+            serviceImplementation="com.gpomares.committracker.services.CommitCacheService"
+        />
+    </extensions>
+
+    <projectListeners>
+        <!-- Listen for Git repository changes -->
+        <listener
+            class="com.gpomares.committracker.listeners.RepositoryChangeListener"
+            topic="git4idea.repo.GitRepositoryChangeListener"
+        />
+    </projectListeners>
+</idea-plugin>

@@ -1,0 +1,12 @@
+<ivy-module version="2.0">
+  <info organisation="bundledPlugin" module="Git4Idea" revision="2024.1+837"/>
+  <configurations>
+    <conf name="default" visibility="public"/>
+  </configurations>
+  <publications>
+    <artifact name="/home/gpomares/.gradle/caches/8.10/transforms/4a4e6d733c9af52679a31c8129f2adce/transformed/ideaIC-2024.1/plugins/vcs-git" type="directory" conf="default"/>
+  </publications>
+  <dependencies>
+    <dependency org="bundledPlugin" name="com.jetbrains.performancePlugin" rev="241.14494.240+166"/>
+  </dependencies>
+</ivy-module>

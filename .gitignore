@@ -1,0 +1,19 @@
+# Gradle
+.gradle/
+build/
+out/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# MacOS
+.DS_Store
+
+# Kotlin
+*.kotlin_module
+
+# Sandbox directories
+runIde/
