@@ -1,6 +1,9 @@
 # Git Commit Tracker Plugin for IntelliJ IDEA
 
-A powerful IntelliJ IDEA plugin to track and filter commits across multiple Git repositories in your workspace.
+[![GitHub license](https://img.shields.io/github/license/gpomares/git-commit-tracker)](https://github.com/gpomares/git-commit-tracker/blob/main/LICENSE)
+[![GitHub issues](https://img.shields.io/github/issues/gpomares/git-commit-tracker)](https://github.com/gpomares/git-commit-tracker/issues)
+
+A powerful IntelliJ IDEA plugin to track and filter commits across multiple Git repositories in your workspace. Perfect for developers working on monorepos or multiple projects simultaneously.
 
 ## Features
 
@@ -54,15 +57,18 @@ To run the plugin in a sandbox IDE:
 
 ```
 git-commit-tracker/
-├── src/main/kotlin/com/yourcompany/committracker/
+├── src/main/kotlin/com/gpomares/committracker/
 │   ├── toolwindow/          # UI components (tool window, panel, table)
 │   ├── services/            # Core services (commit query, repo detection, caching)
 │   ├── models/              # Data models
 │   ├── ui/                  # UI components (filters, renderers)
 │   ├── listeners/           # Event listeners
 │   └── utils/               # Utility classes
-└── src/main/resources/META-INF/
-    └── plugin.xml           # Plugin configuration
+├── src/main/resources/META-INF/
+│   └── plugin.xml           # Plugin configuration
+├── build.gradle.kts         # Gradle build script
+├── gradle.properties        # Gradle properties
+└── settings.gradle.kts      # Gradle settings
 ```
 
 ### Building
@@ -78,6 +84,31 @@ git-commit-tracker/
 ./gradlew runIde
 ```
 
+## Contributing
+
+We welcome contributions! Please follow these steps:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+### Development Setup
+
+- Ensure you have Java 21+ installed
+- Use IntelliJ IDEA 2024.3+ for development
+- Run `./gradlew test` to execute tests
+- Run `./gradlew buildPlugin` to build the plugin
+
+## Issues and Support
+
+If you encounter any issues or have questions:
+
+- Check the [Issues](https://github.com/gpomares/git-commit-tracker/issues) page
+- Create a new issue with detailed information
+- Include your IntelliJ version, OS, and steps to reproduce
+
 ## Technical Details
 
 - **Language**: Kotlin
@@ -86,3 +117,7 @@ git-commit-tracker/
 - **Git Integration**: Uses git4idea plugin APIs
 - **Async Processing**: Kotlin Coroutines
 - **Caching**: In-memory with 5-minute expiration
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
