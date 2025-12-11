@@ -14,6 +14,7 @@ A powerful IntelliJ IDEA plugin to track and filter commits across multiple Git 
   - Filter by specific repository
   - Search commits by message, hash, or author
 - **Clean UI**: Tool window panel with sortable table
+- **Data Export**: Export commits to CSV files or copy to clipboard for external analysis
 - **Performance Optimized**: Built-in caching for handling many repositories efficiently
 
 ## Requirements
@@ -50,6 +51,7 @@ To run the plugin in a sandbox IDE:
    - **Repository**: Select a specific repository or view all
 5. Click column headers to sort the table
 6. Click "Refresh" to reload commits from repositories
+7. Click "Extract" to export commits to CSV or copy to clipboard
 
 ## Development
 
@@ -84,30 +86,12 @@ git-commit-tracker/
 ./gradlew runIde
 ```
 
-## Contributing
-
-We welcome contributions! Please follow these steps:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
 ### Development Setup
 
 - Ensure you have Java 21+ installed
 - Use IntelliJ IDEA 2024.3+ for development
 - Run `./gradlew test` to execute tests
 - Run `./gradlew buildPlugin` to build the plugin
-
-## Issues and Support
-
-If you encounter any issues or have questions:
-
-- Check the [Issues](https://github.com/gpomares/git-commit-tracker/issues) page
-- Create a new issue with detailed information
-- Include your IntelliJ version, OS, and steps to reproduce
 
 ## Technical Details
 
@@ -118,6 +102,3 @@ If you encounter any issues or have questions:
 - **Async Processing**: Kotlin Coroutines
 - **Caching**: In-memory with 5-minute expiration
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
