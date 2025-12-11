@@ -7,6 +7,7 @@ import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.ui.table.JBTable
+import com.gpomares.committracker.models.CommitInfo
 import com.gpomares.committracker.services.GitCommitService
 import com.gpomares.committracker.services.RepositoryDetectionService
 import com.gpomares.committracker.ui.CommitFilterPanel
@@ -21,6 +22,13 @@ import java.awt.Dimension
 import javax.swing.JPanel
 import javax.swing.JLabel
 import javax.swing.SwingConstants
+import javax.swing.JButton
+import java.awt.FlowLayout
+import java.io.StringWriter
+import java.nio.charset.StandardCharsets
+import javax.swing.JOptionPane
+import java.awt.Toolkit
+import java.awt.datatransfer.StringSelection
 
 class CommitTrackerPanel(private val project: Project) : JPanel(), Disposable {
 
@@ -32,6 +40,7 @@ class CommitTrackerPanel(private val project: Project) : JPanel(), Disposable {
     private val commitTable = JBTable(commitTableModel)
     private val filterPanel = CommitFilterPanel(project)
     private val statusLabel = JLabel("Loading commits...", SwingConstants.CENTER)
+    private val extractButton = JButton("Extract")
 
     init {
         layout = BorderLayout()
@@ -41,8 +50,15 @@ class CommitTrackerPanel(private val project: Project) : JPanel(), Disposable {
     }
 
     private fun setupUI() {
-        // Add filter panel at the top
-        add(filterPanel, BorderLayout.NORTH)
+        // Create top panel with filter and extract button
+        val topPanel = JPanel(BorderLayout())
+        topPanel.add(filterPanel, BorderLayout.CENTER)
+
+        // Wrap extract button in a panel to match height
+        val buttonPanel = JPanel(FlowLayout(FlowLayout.CENTER))
+        buttonPanel.add(extractButton)
+        topPanel.add(buttonPanel, BorderLayout.EAST)
+        add(topPanel, BorderLayout.NORTH)
 
         // Add table in the center
         val scrollPane = JBScrollPane(commitTable)
@@ -72,6 +88,10 @@ class CommitTrackerPanel(private val project: Project) : JPanel(), Disposable {
 
         filterPanel.addFetchListener {
             fetchAllRepositories()
+        }
+
+        extractButton.addActionListener {
+            extractCommits()
         }
     }
 
@@ -204,6 +224,85 @@ class CommitTrackerPanel(private val project: Project) : JPanel(), Disposable {
 
     fun refresh() {
         loadCommitsAsync()
+    }
+
+    private fun extractCommits() {
+        val commits = commitTableModel.getAllCommits()
+        if (commits.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "No commits to extract", "Extract", JOptionPane.INFORMATION_MESSAGE)
+            return
+        }
+
+        // Show dialog with options
+        val options = arrayOf("Export to CSV", "Copy to Clipboard", "Cancel")
+        val choice = JOptionPane.showOptionDialog(
+            this,
+            "Choose extraction method:",
+            "Extract Commits",
+            JOptionPane.DEFAULT_OPTION,
+            JOptionPane.QUESTION_MESSAGE,
+            null,
+            options,
+            options[0]
+        )
+
+        when (choice) {
+            0 -> exportToCSV(commits)
+            1 -> copyToClipboard(commits)
+            2 -> return
+        }
+    }
+
+    private fun exportToCSV(commits: List<CommitInfo>) {
+        try {
+            val writer = StringWriter()
+            val csvWriter = java.io.PrintWriter(writer)
+
+            // Write header
+            csvWriter.println("Repository,Hash,Message,Author,Email,Date,Branch")
+
+            // Write data
+            commits.forEach { commit ->
+                csvWriter.println(
+                    "\"${commit.repository}\",\"${commit.hash}\",\"${commit.message.replace("\"", "\"\"")}\",\"${commit.author}\",\"${commit.authorEmail}\",\"${commit.formattedDate}\",\"${commit.branch}\""
+                )
+            }
+
+            csvWriter.flush()
+            csvWriter.close()
+
+            // Save to file
+            val content = writer.toString()
+            val fileChooser = javax.swing.JFileChooser()
+            fileChooser.dialogTitle = "Save Commits as CSV"
+            fileChooser.fileFilter = javax.swing.filechooser.FileNameExtensionFilter("CSV Files", "csv")
+            
+            if (fileChooser.showSaveDialog(this) == javax.swing.JFileChooser.APPROVE_OPTION) {
+                val file = fileChooser.selectedFile
+                java.nio.file.Files.write(
+                    java.nio.file.Paths.get(file.absolutePath),
+                    content.toByteArray(StandardCharsets.UTF_8)
+                )
+                JOptionPane.showMessageDialog(this, "Commits exported successfully", "Export Complete", JOptionPane.INFORMATION_MESSAGE)
+            }
+        } catch (e: Exception) {
+            log.error("Error exporting to CSV", e)
+            JOptionPane.showMessageDialog(this, "Error exporting to CSV: ${e.message}", "Error", JOptionPane.ERROR_MESSAGE)
+        }
+    }
+
+    private fun copyToClipboard(commits: List<CommitInfo>) {
+        try {
+            val clipboard = Toolkit.getDefaultToolkit().systemClipboard
+            val stringSelection = StringSelection(commits.joinToString("\n") { commit ->
+                "${commit.repository}\t${commit.shortHash}\t${commit.firstLineMessage}\t${commit.author}\t${commit.formattedDate}"
+            })
+            clipboard.setContents(stringSelection, null)
+            JOptionPane.showMessageDialog(this, "Commits copied to clipboard", "Copy Complete", JOptionPane.INFORMATION_MESSAGE)
+        } catch (e: Exception) {
+            log.error("Error copying to clipboard", e)
+            JOptionPane.showMessageDialog(this, "Error copying to clipboard: ${e.message}", "Error", JOptionPane.ERROR_MESSAGE)
+        }
     }
 
     override fun dispose() {

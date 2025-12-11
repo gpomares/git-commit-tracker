@@ -6,7 +6,9 @@ import com.intellij.ui.SearchTextField
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBTextField
 import com.gpomares.committracker.services.RepositoryDetectionService
+import java.awt.Component
 import java.awt.FlowLayout
+import javax.swing.BoxLayout
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
@@ -23,7 +25,7 @@ class CommitFilterPanel(private val project: Project) : JPanel() {
     private val repoComboBox = JComboBox<String>()
 
     init {
-        layout = FlowLayout(FlowLayout.LEFT, 10, 5)
+        layout = BoxLayout(this, BoxLayout.Y_AXIS)
         setupUI()
         loadRepositories()
         setDefaultDates()
@@ -38,38 +40,42 @@ class CommitFilterPanel(private val project: Project) : JPanel() {
     }
 
     private fun setupUI() {
+        // Single row with all controls
+        val panel = JPanel(FlowLayout(FlowLayout.LEFT, 10, 5))
+        panel.alignmentX = Component.LEFT_ALIGNMENT
+        
+        // Repository dropdown
+        panel.add(JBLabel("Repository:"))
+        repoComboBox.toolTipText = "Filter by repository"
+        panel.add(repoComboBox)
+        
         // Search field
-        add(JBLabel("Search:"))
+        panel.add(JBLabel("Search:"))
         searchField.textEditor.toolTipText = "Search in commit message, hash, or author"
-        add(searchField)
+        panel.add(searchField)
 
         // Date range filters
-        add(JBLabel("From:"))
+        panel.add(JBLabel("From:"))
         dateFromField.toolTipText = "Start date (yyyy-MM-dd)"
-        add(dateFromField)
+        panel.add(dateFromField)
 
-        add(JBLabel("To:"))
+        panel.add(JBLabel("To:"))
         dateToField.toolTipText = "End date (yyyy-MM-dd)"
-        add(dateToField)
-
-        // Repository filter
-        add(JBLabel("Repository:"))
-        repoComboBox.toolTipText = "Filter by repository"
-        add(repoComboBox)
+        panel.add(dateToField)
 
         // Apply button
         val applyButton = JButton("Apply Filters")
         applyButton.addActionListener {
             notifyFilterChange()
         }
-        add(applyButton)
+        panel.add(applyButton)
 
         // Clear button
         val clearButton = JButton("Clear")
         clearButton.addActionListener {
             clearFilters()
         }
-        add(clearButton)
+        panel.add(clearButton)
 
         // Refresh button
         val refreshButton = JButton("Refresh")
@@ -77,7 +83,7 @@ class CommitFilterPanel(private val project: Project) : JPanel() {
             loadRepositories()
             notifyFilterChange()
         }
-        add(refreshButton)
+        panel.add(refreshButton)
 
         // Fetch button
         val fetchButton = JButton("Fetch All Repos")
@@ -85,7 +91,9 @@ class CommitFilterPanel(private val project: Project) : JPanel() {
         fetchButton.addActionListener {
             notifyFetchRequested()
         }
-        add(fetchButton)
+        panel.add(fetchButton)
+
+        add(panel)
     }
 
     private fun loadRepositories() {
