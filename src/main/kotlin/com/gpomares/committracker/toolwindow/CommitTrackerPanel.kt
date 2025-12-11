@@ -59,11 +59,10 @@ class CommitTrackerPanel(private val project: Project) : JPanel(), Disposable {
 
         // Set column widths
         commitTable.columnModel.getColumn(0).preferredWidth = 150  // Repository
-        commitTable.columnModel.getColumn(1).preferredWidth = 100  // Branch
-        commitTable.columnModel.getColumn(2).preferredWidth = 80   // Hash
-        commitTable.columnModel.getColumn(3).preferredWidth = 400  // Message
-        commitTable.columnModel.getColumn(4).preferredWidth = 150  // Author
-        commitTable.columnModel.getColumn(5).preferredWidth = 150  // Date
+        commitTable.columnModel.getColumn(1).preferredWidth = 80   // Hash
+        commitTable.columnModel.getColumn(2).preferredWidth = 400  // Message
+        commitTable.columnModel.getColumn(3).preferredWidth = 150  // Author
+        commitTable.columnModel.getColumn(4).preferredWidth = 150  // Date
     }
 
     private fun setupListeners() {

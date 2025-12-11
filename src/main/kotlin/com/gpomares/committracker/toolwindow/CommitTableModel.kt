@@ -9,7 +9,6 @@ class CommitTableModel : AbstractTableModel() {
 
     private val columnNames = arrayOf(
         "Repository",
-        "Branch",
         "Hash",
         "Message",
         "Author",
@@ -26,11 +25,10 @@ class CommitTableModel : AbstractTableModel() {
         val commit = commits[rowIndex]
         return when (columnIndex) {
             0 -> commit.repository
-            1 -> commit.branch
-            2 -> commit.shortHash
-            3 -> commit.firstLineMessage  // First line only
-            4 -> commit.author
-            5 -> commit.formattedDate
+            1 -> commit.shortHash
+            2 -> commit.firstLineMessage  // First line only
+            3 -> commit.author
+            4 -> commit.formattedDate
             else -> ""
         }
     }

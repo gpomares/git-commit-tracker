@@ -26,6 +26,15 @@ class CommitFilterPanel(private val project: Project) : JPanel() {
         layout = FlowLayout(FlowLayout.LEFT, 10, 5)
         setupUI()
         loadRepositories()
+        setDefaultDates()
+    }
+
+    private fun setDefaultDates() {
+        val today = LocalDate.now()
+        val twoWeeksAgo = today.minusWeeks(2)
+        
+        dateToField.text = today.format(DateTimeFormatter.ISO_LOCAL_DATE)
+        dateFromField.text = twoWeeksAgo.format(DateTimeFormatter.ISO_LOCAL_DATE)
     }
 
     private fun setupUI() {

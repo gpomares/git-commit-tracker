@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.gpomares.git-commit-tracker</id>
     <name>Git Commit Tracker</name>
-    <vendor email="support@yourcompany.com" url="https://www.yourcompany.com">Your Company</vendor>
+    <vendor url="https://github.com/gpomares">gpomares</vendor>
 
     <description><![CDATA[
         Track and filter commits across all Git repositories in your IntelliJ project.<br/>

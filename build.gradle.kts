@@ -65,7 +65,7 @@ intellijPlatform {
 }
 
 kotlin {
-    jvmToolchain(17)  // Using Java 17
+    jvmToolchain(21)  // Use Java 21
 }
 
 tasks {
